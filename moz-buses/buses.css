@@ -1,0 +1,21 @@
+
+
+div.row{
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    -webkit-justify-content:space-around;
+    font-size: 150%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-transition: color 0.3s;
+    transition: color 0.3s;
+}
+
+
+h2.control{
+    font-size: 300%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;   
+}
+
