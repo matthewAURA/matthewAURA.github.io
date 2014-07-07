@@ -1,0 +1,193 @@
+
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>AURA Speed Applet</title>
+        <meta name="description" content="">
+        <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/speeds.css">
+        <script type="text/javascript" src="js/speeds.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">AURA Speeds App</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">About</a></li>
+                <li><a href="http://www.aura.org.nz">AURA Home</a></li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+
+        <div class="main">
+            <div class="input-group-lg" style="width:100%">
+                
+                <div class="panel panel-default btn-group  btn-group-justified" data-toggle="buttons">
+                  <label class="btn btn-default"><input type="checkbox" id="100rpm"> 100 RPM</label>
+                  <label class="btn btn-default"><input type="checkbox" id="160rpm"> 160 RPM</label>
+                  <label class="btn btn-default"><input type="checkbox" id="240rpm"> 240 RPM</label>
+                </div>
+                <div class="panel panel-default btn-group  btn-group-justified" data-toggle="buttons">
+                  <label class="btn btn-default"><input type="checkbox" id="tankDrive"> Tank Drive</label>
+                  <label class="btn btn-default"><input type="checkbox" id="xDrive"> X Drive</label>
+                </div>
+                <div class="panel panel-default btn-group  btn-group-justified" data-toggle="buttons">
+                  <label class="btn btn-default"><input type="checkbox" id="gears"> Gears</label>
+                  <label class="btn btn-default"><input type="checkbox" id="chain"> Sprockets</label>
+                </div>
+                <div class="panel panel-default btn-group  btn-group-justified" data-toggle="buttons">
+                  <label class="btn btn-default"><input type="checkbox" id="smallWheels">2.75"</label>
+                  <label class="btn btn-default"><input type="checkbox" id="mediumWheels">3.25"</label>
+                  <label class="btn btn-default"><input type="checkbox" id="largeWheels">4"</label>
+                </div>
+                <div class="panel panel-default ">
+                    <div class="panel-heading">Minimum Speed</div>
+                    <div class="panel-body"><input id="minspeed" type="number" class="form-control" value="1" step="0.5"></div>
+                </div>
+                <div class="panel panel-default ">
+                    <div class="panel-heading">Maximum Speed</div>
+                    <div class="panel-body"><input id="maxspeed" type="number" class="form-control" value="2" step="0.5"></div>
+                </div>
+         
+            </div>
+            
+            <table class="table"><thead>
+                <tr>
+                    <th></th>
+                    <th>Speed</th>
+                    <th>Motors</th>
+                    <th>Drivetrain</th>
+                    <th>Wheels</th>
+                    <th>External</th>
+                </tr>
+                </thead>
+                <tbody id="speedslist"></tbody>
+            </table>
+          <script type="text/javascript">
+            var displayedSpeeds = {};
+
+            window.onload = function(event){
+                Calculator.setup();
+                updateSpeeds();
+                //alert($('#100rpm').is(':checked'));
+            };
+              
+            $('#maxspeed').focusout(updateSpeeds);
+            $('#minspeed').focusout(updateSpeeds);
+            $("input").change(updateSpeeds);    
+              
+            function updateSpeeds(){
+                var max = $('#maxspeed').val();
+                var min = $('#minspeed').val();
+                var newSpeeds = Calculator.update(min,max);
+                $('#speedslist').empty();
+                for (i in newSpeeds){
+                    //Check to see if the speed matches our filters
+                    var motor = "100 RPM";
+                    switch (newSpeeds[i].motor){
+                            case 1:
+                                if (!$('#100rpm').is(':checked')){
+                                    continue;
+                                }
+                                break;
+                            case 1.6:
+                                if (!$('#160rpm').is(':checked')){
+                                    continue;
+                                }
+                                motor = "160 RPM"
+                                break;
+                            case 2.4:
+                                if (!$('#240rpm').is(':checked')){
+                                    continue;
+                                }
+                                motor="240 RPM";
+                                break;
+                    }
+                    
+                    var driveTrain = "Tank"
+                    if (newSpeeds[i].driveTrain != 1){
+                        driveTrain = "X-Drive";
+                    }
+                    
+                    switch (driveTrain){
+                            case "Tank":
+                                if (!$('#tankDrive').is(':checked')){
+                                    continue;
+                                }
+                                break;
+                            case "X-Drive":
+                                if (!$('#xDrive').is(':checked')){
+                                    continue;
+                                }
+                                break;
+                    }
+                    
+                    var wheels = '4\"';
+                    switch (newSpeeds[i].wheel){
+                            case 1:
+                                if (!$('#largeWheels').is(':checked')){
+                                    continue;
+                                }
+                                break;
+                            case 0.8125:
+                                if (!$('#mediumWheels').is(':checked')){    
+                                    continue;
+                                }
+                                wheels = '3.25\"';
+                                break;
+                            case 0.6875:
+                                if (!$('#smallWheels').is(':checked')){
+                                    continue;
+                                }
+                                wheels = '2.75\"';
+                                break;
+                    }
+                    switch (newSpeeds[i].external.type){
+                            case "Gears":
+                                if (!$('#gears').is(':checked')){
+                                    continue;
+                                }
+                                break;
+                            case "Chain":
+                                if (!$('#chain').is(':checked')){
+                                    continue;
+                                }
+                                break;
+                    }
+                    
+
+                    
+                    $('#speedslist').append('<tr class="row">'+ '<th>'+ newSpeeds[i].ratio.toFixed(2) +'</th>'+ '<th>'+ motor +'</th>'+ 
+                                            '<th>'+ driveTrain +'</th>'+'<th>'+ wheels +'</th>'+'<th>'+
+                                            newSpeeds[i].external.input+":"+ newSpeeds[i].external.output + " " +
+                                            newSpeeds[i].external.type +'</th>'+'</tr>');       
+                }
+            }
+
+            
+
+
+            </script>
+        </div>
+    </body>
+</html>
+
+
