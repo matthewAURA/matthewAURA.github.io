@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Matthew Dyer</title>
+    <title>matthewAURA.github.io</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -39,6 +39,7 @@
             <li class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
             <li><a href="#about" role="tab" data-toggle="tab">About</a></li>
             <li><a href="#speeds" role="tab" data-toggle="tab">VEX Drivetrain Calculator</a></li>
+            <li><a href="#graphics" role="tab" data-toggle="tab" id="graphicsButton">Graphics</a></li>
             <li><a href="/moz-buses">Buses App</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -93,6 +94,21 @@
 
             </div> <!-- /container -->
         </div>
+        
+        <div class="tab-pane fade" id="graphics">  
+            <div class="container" id="canvas-width">
+              <!-- Main component for a primary marketing message or call to action -->
+              <div class="jumbotron row" >
+                  <div class="col-md-12" id="canvas-parent">
+                    <h1>3D Graphics</h1>
+                    
+              </div>
+              
+                
+            </div>
+
+            </div> <!-- /container -->
+        </div>
     </div>
 
     <!-- Bootstrap core JavaScript
@@ -100,10 +116,59 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/three.min.js"></script>
+    <script src="js/tween.min.js"></script>
+    <script src="js/graphics.js"></script>
+    
     <script>
                         $('#fullscreen').click(function(){
                             window.location.href = "/speeds"; 
                         });
     </script>
+      
+    <script> 
+        var haveCreatedCanvas = false;
+        
+        function animate(time){
+            window.requestAnimationFrame(animate);
+            TWEEN.update(time);
+
+        }
+        $('#graphicsButton').click(function(){
+            if (haveCreatedCanvas){
+                return;
+            }else{
+                haveCreatedCanvas = true;
+            }
+             var position = 0;
+             animate();
+        Graphics = new SiteGraphics(document.getElementById("canvas-parent"),$("#canvas-width").width()*0.9,$(window).height()*0.7);
+        Graphics.addCube(new THREE.Vector3(10,0,0));
+        Graphics.addCube(new THREE.Vector3(-10,0,0));
+        Graphics.addSphere(new THREE.Vector3(-10,5,0));
+        window.addEventListener("keydown",function(){
+           if (position == 0){
+            Graphics.tweenCamera(new THREE.Vector3(20,20,0),new THREE.Vector3(0,0,0),1000);   
+            position += 1;
+           }else if (position == 1){
+            Graphics.tweenCamera(new THREE.Vector3(0,20,-20),new THREE.Vector3(0,0,0),1000); 
+            position += 1;
+           }else if (position == 2){
+            Graphics.tweenCamera(new THREE.Vector3(-20,20,0),new THREE.Vector3(0,0,0),1000); 
+            position += 1;  
+           }else if (position == 3){
+            Graphics.tweenCamera(new THREE.Vector3(0,20,20),new THREE.Vector3(0,0,0),1000); 
+            position += 1;  
+           }
+            position = position % 4;
+            
+        });
+
+        render();
+        });
+        
+       
+    </script>   
+      
   </body>
 </html>
