@@ -1,0 +1,6 @@
+@import '../lib/bootstrap/dist/css/bootstrap.min.css';
+@import '../lib/font-awesome/css/font-awesome.css';
+@import '../lib/sweetalert/lib/sweet-alert.css';
+@import '../lib/spinkit/css/spinkit.css';
+@import '../lib/spinkit/css/spinners/7-three-bounce.css';
+@import 'style.css'
